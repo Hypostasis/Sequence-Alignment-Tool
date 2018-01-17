@@ -1,3 +1,5 @@
+from Bio.SubsMat import MatrixInfo as mi
+import numpy as np
 class crawler:
     def __init__(self, point, seqA, seqB, strA, strB, matrix):
         self.point = point
@@ -10,9 +12,10 @@ class crawler:
     def step(self):
 
         if(self.point == (0, 0)):
-            print("ALIGNMENT:")
-            print(self.strA)
-            print(self.strB)
+            with open('output.txt', 'a') as file:
+                file.write("ALIGNMENT:\n")
+                file.write(self.strA+'\n')
+                file.write(self.strB+'\n')
             return
         if(self.matrix[self.point[0]][self.point[1]] == 4):
             self.strA = self.seqA[self.point[0]-1] + self.strA
@@ -72,9 +75,11 @@ def readValue(query):
     if query in mi.blosum62.keys():
         return mi.blosum62[query]
     else:
-        return mi.blosum62[(query[1],query[0])]
+        return mi.blosum62[(query[1], query[0])]
 
 def NeedlemanWunsch(seqA, seqB):
+    with open('output.txt', 'w') as file:
+        file.write("SEQUENCE ALIGNMENT TOOL OUTPUT\n")
     gap_penalty = -7
     antecedents = np.zeros((len(seqA) + 1, len(seqB) + 1), int)
     for i in range(1, len(seqB)):
@@ -102,7 +107,8 @@ def NeedlemanWunsch(seqA, seqB):
             if optimalValue == H[i][j-1] + gap_penalty:
                 #z lewej
                 antecedents[i][j] = antecedents[i][j] + 2
-    print("Optimal value: ", H[len(seqA)][len(seqB)])
+    with open('output.txt', 'a') as file:
+        file.write("Optimal value: " + str(H[len(seqA)][len(seqB)]) + "\n")
     traversal = crawler((len(seqA), len(seqB)), seqA, seqB, "","", antecedents)
 
     traversal.step()
