@@ -44,6 +44,9 @@ class GUI:
     def align_g(self):
 
         if self.var_fromfile.get() == 1:
+            self.load_fasta()
+            seq1 = self.sequences[0][1]
+            seq2 = self.sequences[1][1]
             pass
         else:
             seq1 = self.field_S1.get()
@@ -61,8 +64,12 @@ class GUI:
 
     def align_l(self):
         if self.var_fromfile.get() == 1:
+            self.load_fasta()
+            seq1 = self.sequences[0][1]
+            seq2 = self.sequences[1][1]
             pass
         else:
+            self.sequences = []
             seq1 = self.field_S1.get()
             seq2 = self.field_S2.get()
         alignments = pairwise2.align.localxx(seq1, seq2)
